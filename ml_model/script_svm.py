@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, f1_score, make_scorer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
+import pickle
 
 
 class ml_model:
@@ -61,8 +61,9 @@ class ml_model:
 
     def svm_model(self):
 
-        clf = svm.SVC(class_weight='balanced')
+        clf = svm.SVC(class_weight='balanced', probability=True)
         clf.fit(self.X_train, self.y_train)
+        pickle.dump(clf, open('/home/rfernandes/AllerGenProt/ml_model/svm_model.sav', 'wb'))
         predictions = clf.predict(self.X_test)
         score = classification_report(self.y_test, predictions)
         output_file = '/home/rfernandes/allerStat/ml_model/svm_output3.txt'
@@ -81,6 +82,7 @@ class ml_model:
 
         lclf = GridSearchCV(LinearSVC(class_weight='balanced'), param_grid=param_grid, verbose=3, cv=5, scoring=scorer)
         lclf.fit(self.X_train, self.y_train)
+        pickle.dump(lclf, open('/home/rfernandes/AllerGenProt/ml_model/lclf_model.sav', 'wb'))
         predictions = lclf.predict(self.X_test)
         score = classification_report(self.y_test, predictions)
 
@@ -101,6 +103,7 @@ class ml_model:
 
         grid_lr = GridSearchCV(LogisticRegression(max_iter=10000),param_grid, verbose=3, cv=5, scoring=scorer)
         grid_lr.fit(self.X_train, self.y_train)
+        pickle.dump(clf, open('/home/rfernandes/AllerGenProt/ml_model/grid_lr_model.sav', 'wb'))
         y_pred_grid_lr = grid_lr.predict(self.X_test)
         score = classification_report(self.y_test, y_pred_grid_lr)
 
