@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from generativeModels.gGAN.train import Trainable
 from eval.eval import TrainTestValHoldout
 

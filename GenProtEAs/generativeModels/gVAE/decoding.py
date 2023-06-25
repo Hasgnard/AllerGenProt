@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA/generativeModels/gVAE')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs/generativeModels/gVAE')
 
 from generativeModels.gVAE.alphabet import aa_letters
 

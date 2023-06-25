@@ -7,7 +7,7 @@ import csv
 Evaluate Raw Dataset on the intended metrics
 '''
 def evaluate_samples(samples):
-    destFile = "/home/rfernandes/projeto/GenProtEA/output/GAN_dataset_rules_eval.csv"
+    destFile = "/home/rfernandes/AllerGenProt/GenProtEAs/output/GAN_dataset_rules_eval.csv"
     #header = ['proteins','hydrophobicity']
     header = ['proteins','Solubility_rules', 'Synthesis_rules']
     with open(destFile, 'a') as f:

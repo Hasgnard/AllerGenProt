@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 import numpy as np
 import pandas as pd
 from utils.alphabet import aa_letters

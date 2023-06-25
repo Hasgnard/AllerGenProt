@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from utils.data_loaders import to_one_hot
 import numpy as np
 import gzip

@@ -6,7 +6,7 @@ import csv
 Evaluate the Raw dataset on the intended metric
 '''
 def evaluate(samples):
-    destFile = "/home/rfernandes/projeto/GenProtEA/output/VAE_generated_results.csv"
+    destFile = "/home/rfernandes/AllerGenProt/GenProtEAs/output/VAE_generated_results.csv"
     header = ['proteins','hydrophobicity','solubility_rules','synthesis_rules','hmm']
     with open(destFile, 'a') as f:
         writer = csv.writer(f)

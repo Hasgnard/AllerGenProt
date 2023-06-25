@@ -4,10 +4,10 @@ from random import Random
 from datetime import datetime
 import copy
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from run import *
 from optimization.problem import proteinProblem
-from optimization.evaluation import Max_Hidrophobicity, Min_Rules_Solubility, Min_Rules_Synthesis, Essential_aa, MinAllerginicity
+from optimization.evaluation import Max_Hidrophobicity, Min_Rules_Solubility, Min_Rules_Synthesis, Essential_aa, MinAllergenicity
 import os
 import tensorflow as tf
 import pandas as pd
@@ -165,35 +165,35 @@ class caseMaxEssential(caseStudy):
                 self.bestScores.append([np.max(df["score"])])
                 self.bestPROTS.append(df[df["score"] == np.max(df["score"])]["PROTS"].values[0]) 
     
-# class caseMinAllergens(caseStudy):
+class caseMinAllergens(caseStudy):
     
-#         def __init__(self):
-#             super(caseMinAllergens, self).__init__()
-#             self.name = "caseMinAllergens"
-#             self.resNames = "\tscore\tProts\n"
+        def __init__(self):
+            super(caseMinAllergens, self).__init__()
+            self.name = "caseMinAllergens"
+            self.resNames = "\tscore\tProts\n"
     
-#         def objective(self, multiObjective=False):
+        def objective(self, multiObjective=False):
             
-#             f1 = Min()
-#             problem = proteinProblem([f1])
+            f1 = MinAllergenicity()
+            problem = proteinProblem([f1])
     
-#             fNames = "Min Allergens"
-#             fUsed = [f1]
+            fNames = "Min Allergens"
+            fUsed = [f1]
     
-#             print("\nObjective: Minimize Allergens", "Single-objective")
+            print("\nObjective: Minimize Allergens", "Single-objective")
     
-#             return problem, fNames, fUsed
+            return problem, fNames, fUsed
     
-#         def parseResults(self):
-#                 repeats = 1
-#                 self.bestScores = []
-#                 self.bestPROTS = []
-#                 for i in range(repeats):
-#                     df = pd.read_csv(self.results[i], sep=";", header=0, index_col=False)
-#                     df["score"] = df["Min"]
+        def parseResults(self):
+                repeats = 1
+                self.bestScores = []
+                self.bestPROTS = []
+                for i in range(repeats):
+                    df = pd.read_csv(self.results[i], sep=";", header=0, index_col=False)
+                    df["score"] = df["Min"]
     
-#                     self.bestScores.append([np.max(df["score"])])
-#                     self.bestPROTS.append(df[df["score"] == np.max(df["score"])]["PROTS"].values[0])
+                    self.bestScores.append([np.max(df["score"])])
+                    self.bestPROTS.append(df[df["score"] == np.max(df["score"])]["PROTS"].values[0])
 
 class caseMaxProb(caseStudy):
 
@@ -226,6 +226,42 @@ class caseMaxProb(caseStudy):
                 self.bestPROTS.append(df[df["score"] == np.max(df["score"])]["PROTS"].values[0])
 
 
+class caseAllerGenProt(caseStudy):
+
+    def __init__(self):
+        super(caseAllerGenProt, self).__init__()
+        self.name = "caseProjMinAllergens"
+        self.resNames = "\tscore\tProts\n"
+
+    def objective(self, multiObjective=True):
+            
+        f1 = Max_Hidrophobicity()
+        f2 = Min_Rules_Synthesis()
+        f3 = Essential_aa()
+        f4 = MinAllergenicity()
+        problem = proteinProblem([f1, f2, f3, f4])
+
+        fNames = "Allergenicity proteins"
+        fUsed = [f1, f2]
+
+        print("\nObjective: Maximize essential aminoacids and hidrophobicity while minimizing rules of synthesis and allergenicity", "Multi-objective")
+
+        return problem, fNames, fUsed
+
+    def parseResults(self):
+            repeats = 1
+            self.bestScores = []
+            self.bestPROTS = []
+            for i in range(repeats):
+                df = pd.read_csv(self.results[i], sep=";", header=0, index_col=False)
+                df["score"] = df["Min"]
+
+                self.bestScores.append([np.max(df["score"])])
+                self.bestPROTS.append(df[df["score"] == np.max(df["score"])]["PROTS"].values[0])
+
+
+
+
 
 if __name__ == "__main__":
 
@@ -240,8 +276,10 @@ if __name__ == "__main__":
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     
-    caseStud = caseMaxHydro()
+    #caseStud = caseMaxHydro()
     #caseStud = caseMinRules()
     #caseStud = caseMaxEssential()
+    caseStud = caseMinAllergens()
+    #caseStud = caseAllerGenProt()
     case = caseStud
     case.run()

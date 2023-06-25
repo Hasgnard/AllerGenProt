@@ -6,15 +6,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from generativeModels.gVAE.vaes import ARVAE
 from utils.io import load_gzdata, read_fasta
 from utils.data_loaders import one_hot_generator
 from matplotlib import pyplot
-
-
-
-
 
 
 # Define training parameters ###################################
@@ -30,8 +26,8 @@ seed = np.random.seed(seed)
 
 
 # Load sequences
-# _, raw_seqs = load_gzdata('/home/rfernandes/projeto/GenProtEA/data/training_data/ll_train.fa.gz/ll_train.fa.gz', one_hot=False)
-# _, val_raw_seqs = load_gzdata('/home/rfernandes/projeto/GenProtEA/data/training_data/ll_train.fa.gz/ll_val.fa.gz', one_hot=False)
+# _, raw_seqs = load_gzdata('/home/rfernandes/AllerGenProt/GenProtEAs/data/training_data/ll_train.fa.gz/ll_train.fa.gz', one_hot=False)
+# _, val_raw_seqs = load_gzdata('/home/rfernandes/AllerGenProt/GenProtEAs/data/training_data/ll_train.fa.gz/ll_val.fa.gz', one_hot=False)
 
 #_, raw_seqs = read_fasta('data/training_data/train.fasta')
 #_, val_raw_seqs = read_fasta('data/training_data/test.fasta')
@@ -44,7 +40,7 @@ seed = np.random.seed(seed)
 
 ###########################################################################################################
 
-dataset = pd.read_csv('/home/rfernandes/projeto/GenProtEA/data/training_data/prot_allergy_500.csv')
+dataset = pd.read_csv('/home/rfernandes/AllerGenProt/GenProtEAs/data/training_data/prot_allergy_500.csv')
 dataset = dataset['sequence'].values
 
 raw_seqs, val_raw_seqs = train_test_split(dataset, test_size=0.25, random_state=42, shuffle=True)
@@ -60,10 +56,10 @@ val_gen = one_hot_generator(val_raw_seqs, padding=504)
 print('Building model')
 model = ARVAE(original_dim=original_dim, latent_dim=latent_dim)
 # (Optionally) define callbacks
-callbacks=[CSVLogger('/home/rfernandes/projeto/GenProtEA/output/logs_raw/arvae.csv')]
+callbacks=[CSVLogger('/home/rfernandes/AllerGenProt/GenProtEAs/output/logs_raw/allergy_arvae.csv')]
 callbacks.append(EarlyStopping(monitor='val_loss', patience=10, mode='min'))
 
-callbacks.append(ModelCheckpoint('/home/rfernandes/projeto/GenProtEA/output/weights_raw/allergy_arvae'+'.{epoch:02d}.h5',
+callbacks.append(ModelCheckpoint('/home/rfernandes/AllerGenProt/GenProtEAs/output/weights_raw/allergy_arvae'+'.{epoch:02d}.h5',
                                   save_best_only=True, verbose=1, monitor="val_loss", mode='min'))
 
 # Train model https://github.com/keras-team/keras/issues/8595

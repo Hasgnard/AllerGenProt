@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from optimization.evaluation import Max_Hidrophobicity, Min_Rules_Solubility, Min_Rules_Synthesis, Min_reps, Essential_aa
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from run import *
 from loadModels import loadVAE
 from optimization.problem import proteinProblem

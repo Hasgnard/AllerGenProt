@@ -44,6 +44,8 @@ class InspyredProblem:
         for i in range(len(candidates)):
 
             if self.problem.number_of_objectives == 1:
+                print(i)
+                print(len(listScores))
                 if self.batched: fitness.append( listScores[i][0] )
                 else: fitness.append( listScores[i] )
             else:

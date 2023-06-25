@@ -29,7 +29,7 @@ def right_pad(seqlist, target_length=None):
     return [seq + pad_char * (target_length - len(seq)) for seq in seqlist]
 
 def one_hot_generator(seqlist, conditions=None, batch_size=32, 
-                      padding=2048, shuffle=True, alphabet=aa_letters):
+                      padding=504, shuffle=True, alphabet=aa_letters):
     
     if type(seqlist) == pd.Series:
         seqlist = seqlist.values

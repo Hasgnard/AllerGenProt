@@ -35,7 +35,7 @@ class BaseProtVAE:
     # Child classes must define a self.E, self.G
     def __init__(self, n_conditions=0, autoregressive=True,
                  lr=0.001, clipnorm=0., clipvalue=0., metrics=['accuracy', aa_acc],
-                 condition_encoder=True, latent_dim=100, original_dim=504):
+                 condition_encoder=True, latent_dim=50, original_dim=504):
 
         self.n_conditions = n_conditions
         self.condition_encoder = condition_encoder

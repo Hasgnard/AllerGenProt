@@ -1,7 +1,7 @@
 import argparse
 import pickle
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from generativeModels.gVAE.vaes import MSAVAE, ARVAE
 from utils.io import output_fasta
 
@@ -38,5 +38,5 @@ if __name__ == '__main__':
   #parser.add_argument('--num_samples', default=3000, type=int)
   #parser.add_argument('--model_kwargs', default=None, type=str)
   #args = parser.parse_args()
-  main('/home/rfernandes/projeto/GenProtEA/output/weights/msavae.h5', msa=True, num_samples=10000,
+  main('/home/rfernandes/AllerGenProt/GenProtEAs/output/weights/msavae.h5', msa=True, num_samples=10000,
        output_file=None, model_kwargs=None)

@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from abc import ABCMeta, abstractmethod
 import numpy as np
 from functools import reduce
@@ -7,6 +7,12 @@ from Bio import SeqIO
 from hmmer.eval import *
 import math 
 import re
+import pickle
+
+from sklearn import svm
+from keras.preprocessing.sequence import pad_sequences
+
+ml_allergen = pickle.load(open('/home/rfernandes/AllerGenProt/GenProtEAs/optimization/svm_model.sav', 'rb'))
 
 hydroscale  = {'A':  0.620,'R': -2.530,'N': -0.780,'D': -0.900,
                 'C':  0.290,'Q': -0.850,'E': -0.740,'G':  0.480,
@@ -441,33 +447,61 @@ class Essential_aa(EvaluationFunction):
     def __str__(self):
         return 'Maximize essential amino acids'
 
-class MinAllerginicity(EvaluationFunction):
+class MinAllergenicity(EvaluationFunction):
 
-    def __init__(self, maximize=False, worst_fitness=0):
-        super(MinAllerginicity, self).__init__(maximize=maximize, worst_fitness=worst_fitness)
+    def __init__(self, maximize=False, worst_fitness=1):  #penso que o worst_fitness é 1 porque é o valor máximo que o modelo dá sendo 1 alergénio
+        super(MinAllergenicity, self).__init__(maximize=maximize, worst_fitness=worst_fitness)
+        self.allerginicity = ml_allergen
+       
 
-    def evalAllerginicity(self, candidate):
-        allerginicity = 0
+    def one_hot_encode(self, sequences):
+        amino_acids = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y', 'X', 'U', 'B', 'Z', 'O']
         
+        encoded_sequences = []
+        for sequence in sequences:
+            encoded_sequence = []
+            for amino_acid in sequence:
+                vector = [0] * len(amino_acids)
+                if amino_acid in amino_acids:
+                    vector[amino_acids.index(amino_acid)] = 1
+                encoded_sequence.append(vector)
+            encoded_sequences.append(encoded_sequence)
+        
+        padded_sequences = pad_sequences(encoded_sequences, padding='post', dtype='float32')
+        
+        
+        return padded_sequences
 
-        return allerginicity
-    
     def _get_fitness_single(self, candidate):
-        allerginicity = self.evalAllerginicity(candidate)
+        
+        candidate = self.one_hot_encode(candidate)
+        flattened_sequences = candidate.reshape(candidate.shape[0], -1)
+        print(flattened_sequences.shape)
 
-        return allerginicity(candidate)
+        score = self.allerginicity.predict_proba(flattened_sequences)
+        return score
     
-    def _get_fitness_batch(self, listProts):
-        allerginicity_batch =[]
-        for candidate in listProts:
-            allerginicity_batch.append(self.evalAllerginicity(candidate))
-        return allerginicity_batch
+    
+    # def _get_fitness_batch(self, candidate_list):
+        
+    #     scores_list = []
+    #     for candidate in candidate_list:
+    #         score = self._get_fitness_single(candidate)
+    #         scores_list.append(score)
+        
+    #     return scores_list
         
     def __str__(self):
         return 'Minimize allerginicity'
     
 if __name__ == "__main__":
     
+    allerg = MinAllergenicity()
+   
+
+    print(allerg._get_fitness_batch(['MKSILDLSAPFSKYKRFLGLAKIWSYDKEPGKCKFSYQEKLVIRGIPTKSKMRIRLLKKERMDGMGKVPELNKTENKQLWQKYSRGIPGLGGGIIAKYQWETLHCEVCFAKATSSGKHLKFENILSDGVSHKIQCLVAPDSHLVVILPDTIQMDGVKRDFVVGPFTEADGSAQYLIPGDNFSRLKSTTGICMIADETGRIIMYGACSLDSVHELFKKTLYTGRMVYYEEYKRPKSEADKVFDFLNEVQNRIKYRKESKRYNYSRDITKAIEALNRSILVSLSSKFPYYPSKDECSGCEKMREKCKDCRDFIEGYNIRPQKRRWSMTVLRDIEIKTYMDRSTLFAKIWTSKFPFDKTYTCVANRITVEQIPDCKSDFLSDVSKYTKKQSKWNNVSYKRVVQSKKGKVRVSYTKYFENSPFRNYFDKGLKSVVSGFYLIRRKNGSKDFLNPFESYQERDIE', 'MKSILDLSAPFSKYKEDLVTKTGNTVHPYLVNIIKRNTVRKESRRNSWVVDFDDKIRFLGLAKIWSYDKEPGKCKFSYQEKLVIRGIPTKSKMRIRLLKKERMDGMGKVPELNKTENKQLWQKYSRGIPGLGGGIIAKYQWETLHCEVCFAKATSSGKHLKFENILSDGVSHKIQCLVAPDSHLVVILPDTIQMDGVKRDFVVGPFTEADGSAQYLIPGDNFSRLKSTTGICMIADETGRIIMYGACSLDSVHELFKKTLYTGRMVYYEEYKRPKSEADKVFDFLNEVQNRIKYRKESKRYNYSRDITKAIEALNRSILVSLSSKFPYYPSKDECSGCEKMREKCKDCRDFIEGYNIRPQKRRWSMTVLRDIEIKTYMDRSTLFAKIWTSKFPFDKTYTCVANRITVEQIPDCKSDFLSDVSKYTKKQSKWNNVSYKRVVQSKKGKVRVSYTKYFENSPFRNYFDKGLKSVVSGFYLIRRKNGSKDFLNPFESYQERDIE']))
+
+
     import os
     ######################################
     ##         PUT IN LINE 3            ## 

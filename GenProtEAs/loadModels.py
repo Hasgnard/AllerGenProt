@@ -20,10 +20,10 @@ def loadVAE():
     from generativeModels.gVAE.vaes import MSAVAE
     from generativeModels.gVAE.vaes import ARVAE
     #VAE = MSAVAE()
-    #VAE.load_weights('/home/rfernandes/projeto/GenProtEA/output/weights/msavae.h5')
+    #VAE.load_weights('/home/rfernandes/AllerGenProt/GenProtEAs/output/weights/msavae.h5')
     #For ARVAE
     VAE = ARVAE()
-    VAE.load_weights('//home/rfernandes/projeto/GenProtEA/data/weights/allergy_arvae.83.h5')
+    VAE.load_weights('/home/rfernandes/AllerGenProt/GenProtEAs/output/weights_raw/allergy_arvae.17.h5')
     return VAE
 
 
@@ -32,7 +32,7 @@ def loadGAN():
     from eval.eval import TrainTestValHoldout
     train, test, val = TrainTestValHoldout('base L50', 1300, 1)
     GAN = Trainable(train, val)
-    GAN.load('/home/rfernandes/projeto/GenProtEA/test/ckpt/')
+    GAN.load('/home/rfernandes/AllerGenProt/GenProtEAs/test/ckpt/')
     return GAN
     
 

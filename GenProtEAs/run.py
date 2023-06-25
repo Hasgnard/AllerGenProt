@@ -3,7 +3,7 @@ import random
 import warnings
 warnings.filterwarnings('ignore')
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 import numpy as np
 from loadModels import loadVAE
 from optimization import EA
@@ -31,7 +31,7 @@ def savePop(final_pop, fNames, fUsed, totalGenerations):
     model.E.batch_size = model.batch_size
     model.G.batch_size = model.batch_size
     print(len(final_pop))
-    destFile = "/home/rfernandes/projeto/GenProtEA/output/VAE_nsga.csv"
+    destFile = "/home/rfernandes/AllerGenProt/GenProtEAs/output/VAE_aller_prot.csv"
             
     with open(destFile,'a') as f: 
         f.write("Proteins;"+fNames+"\n")
@@ -94,6 +94,7 @@ def run(objective):
 if __name__ == '__main__' and True:
     
     import caseStudies 
+    from caseStudies import caseMinRules, caseMinAllergens, caseAllerGenProt, caseMaxEssential
     # Set seeds
     seed = 41
     random.seed(seed)
@@ -104,8 +105,11 @@ if __name__ == '__main__' and True:
     except: tf.set_random_seed(seed)
 
     #case = getattr(caseStudies, 'caseMaxEssential')
-    case = getattr(caseStudies, 'caseMinRules')
+    #case = caseMinRules()
     #case = getattr(caseStudies, 'caseMaxHydro')
+    case = caseMinAllergens()
+    #case = caseMaxEssential()
+    #case = caseAllerGenProt()
     objective = case.objective
 
     run(objective)

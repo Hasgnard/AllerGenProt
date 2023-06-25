@@ -5,7 +5,7 @@ import numpy as np
 seq = "MNPATWAYLLLGLAIIAEVTGSTFLVKSEGFTRLWPSLAVVVLFCIAFYLLSQVIKVIPLGIAYAIWAGVGIILTAIVGYIVFKQALDLPAFIGIALIISGVVVINLFSQAAGH"
 
 
-HOME = '/home/rfernandes/projeto/GenProtEA/hmmer/'
+HOME = '/home/rfernandes/AllerGenProt/GenProtEAs/hmmer/'
 
 def evaluateHMM(sequence):
     filename = 'seq'+str(random.randint(1000000000000,999999999999999999999))+'.faa'

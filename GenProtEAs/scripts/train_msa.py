@@ -4,7 +4,7 @@ import argparse
 import numpy as np
 from keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from generativeModels.gVAE.vaes import MSAVAE
 from utils.io import load_gzdata, read_fasta
 from utils.data_loaders import one_hot_generator

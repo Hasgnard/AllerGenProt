@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/rfernandes/projeto/GenProtEA')
+sys.path.append('/home/rfernandes/AllerGenProt/GenProtEAs')
 from loadModels import loadVAE
 import numbers
 import collections

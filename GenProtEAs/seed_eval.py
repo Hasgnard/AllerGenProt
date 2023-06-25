@@ -14,7 +14,7 @@ def generate_samples(seed):
     return samples
 
 def evaluate_seed(samples, seed):
-    destFile = "/home/rfernandes/projeto/GenProtEA/output/GAN_results.csv"
+    destFile = "/home/rfernandes/AllerGenProt/GenProtEAs/output/GAN_results.csv"
     header = ['proteins','hydrophobicity','solubility_rules','synthesis_rules','hmm','seed']
     with open(destFile, 'a') as f:
         writer = csv.writer(f)
