@@ -11,6 +11,7 @@ GenProtEAs - (https://github.com/martinsM17/GenProtEA)
 - The "epoch_evaluation" directory houses the pipeline dedicated to determining the optimal epoch during the training phase;
 
 - Inside the "GenProtEAs" folder, you will find the implementation of objective functions utilized in Evolutionary Algorithms (EAs), as well as the train script in the VAE pipeline, in the following files:
+  
       - /scripts/train_raw.py
       - caseStudies.py
       - /optimization/evaluation.py
