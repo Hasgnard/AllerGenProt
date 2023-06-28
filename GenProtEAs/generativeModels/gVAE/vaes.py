@@ -23,7 +23,7 @@ class MSAVAE(BaseProtVAE):
                          n_conditions=n_conditions, autoregressive=False)
 
 class ARVAE(BaseProtVAE):
-    def __init__(self, original_dim=504, latent_dim=50,
+    def __init__(self, original_dim=500, latent_dim=50,
                  clipnorm=5, lr=0.001, n_conditions=0,
                  encoder_kwargs={'num_filters': 26, 'kernel_size': 2},
                  decoder_kwargs={'upsample': False, 'ncell': 512, 'input_dropout': 0.45}):

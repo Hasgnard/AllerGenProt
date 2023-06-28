@@ -19,7 +19,7 @@ seed = 0
 n_epochs = 100
 verbose = 1
 save_all_epochs = False
-original_dim = 504 #2048
+original_dim = 500 #2048
 latent_dim = 50 #100
 seed = np.random.seed(seed)
 # ##############################################################
@@ -49,15 +49,15 @@ print(type(raw_seqs))
 print(len(raw_seqs))
 print(max(len(x) for x in raw_seqs))
 
-train_gen = one_hot_generator(raw_seqs, padding=504)
-val_gen = one_hot_generator(val_raw_seqs, padding=504)
+train_gen = one_hot_generator(raw_seqs, padding=500)
+val_gen = one_hot_generator(val_raw_seqs, padding=500)
 
 # Define model
 print('Building model')
 model = ARVAE(original_dim=original_dim, latent_dim=latent_dim)
 # (Optionally) define callbacks
 callbacks=[CSVLogger('/home/rfernandes/AllerGenProt/GenProtEAs/output/logs_raw/allergy_arvae.csv')]
-callbacks.append(EarlyStopping(monitor='val_loss', patience=10, mode='min'))
+callbacks.append(EarlyStopping(monitor='val_loss', patience=15, mode='min'))
 
 callbacks.append(ModelCheckpoint('/home/rfernandes/AllerGenProt/GenProtEAs/output/weights_raw/allergy_arvae'+'.{epoch:02d}.h5',
                                   save_best_only=True, verbose=1, monitor="val_loss", mode='min'))

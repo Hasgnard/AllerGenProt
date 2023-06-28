@@ -30,7 +30,7 @@ class caseStudy():
 
     def prepDirectory(self):
         # make a new directory to hold the results
-        results_directory = '\output\\results'
+        results_directory = '/home/rfernandes/AllerGenProt/GenProtEAs/output/EA results'
 
     def repeatOptimization(self):
         # Repeat optimization the defined number of times
@@ -235,14 +235,14 @@ class caseAllerGenProt(caseStudy):
 
     def objective(self, multiObjective=True):
             
-        f1 = Max_Hidrophobicity()
+        f1 = MinAllergenicity()
         f2 = Min_Rules_Synthesis()
         f3 = Essential_aa()
-        f4 = MinAllergenicity()
-        problem = proteinProblem([f1, f2, f3, f4])
+        
+        problem = proteinProblem([f1, f2, f3])
 
         fNames = "Allergenicity proteins"
-        fUsed = [f1, f2]
+        fUsed = [f1, f2, f3]
 
         print("\nObjective: Maximize essential aminoacids and hidrophobicity while minimizing rules of synthesis and allergenicity", "Multi-objective")
 
@@ -279,7 +279,7 @@ if __name__ == "__main__":
     #caseStud = caseMaxHydro()
     #caseStud = caseMinRules()
     #caseStud = caseMaxEssential()
-    caseStud = caseMinAllergens()
-    #caseStud = caseAllerGenProt()
+    #caseStud = caseMinAllergens()
+    caseStud = caseAllerGenProt()
     case = caseStud
     case.run()

@@ -12,7 +12,6 @@ import pickle
 from sklearn import svm
 from keras.preprocessing.sequence import pad_sequences
 
-ml_allergen = pickle.load(open('/home/rfernandes/AllerGenProt/GenProtEAs/optimization/svm_model.sav', 'rb'))
 
 hydroscale  = {'A':  0.620,'R': -2.530,'N': -0.780,'D': -0.900,
                 'C':  0.290,'Q': -0.850,'E': -0.740,'G':  0.480,
@@ -434,9 +433,9 @@ class Essential_aa(EvaluationFunction):
         return essential/len(candidate)
     
     def _get_fitness_single(self, candidate):
-        essential = self.essential(candidate)
+        essential_aa = self.essential(candidate)
 
-        return essential
+        return essential_aa
     
     def _get_fitness_batch(self, listProts):
         essential_batch =[]
@@ -451,14 +450,14 @@ class MinAllergenicity(EvaluationFunction):
 
     def __init__(self, maximize=False, worst_fitness=1):  #penso que o worst_fitness é 1 porque é o valor máximo que o modelo dá sendo 1 alergénio
         super(MinAllergenicity, self).__init__(maximize=maximize, worst_fitness=worst_fitness)
-        self.allerginicity = ml_allergen
+        self.allerginicity = pickle.load(open('/home/rfernandes/AllerGenProt/GenProtEAs/optimization/svm_model.sav', 'rb'))
        
 
-    def one_hot_encode(self, sequences):
+    def one_hot_encode(self, candidate):
         amino_acids = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y', 'X', 'U', 'B', 'Z', 'O']
         
         encoded_sequences = []
-        for sequence in sequences:
+        for sequence in candidate:
             encoded_sequence = []
             for amino_acid in sequence:
                 vector = [0] * len(amino_acids)
@@ -474,23 +473,26 @@ class MinAllergenicity(EvaluationFunction):
 
     def _get_fitness_single(self, candidate):
         
-        candidate = self.one_hot_encode(candidate)
+        candidate = self.one_hot_encode([candidate])
         flattened_sequences = candidate.reshape(candidate.shape[0], -1)
-        print(flattened_sequences.shape)
+        reshaped_candidate = flattened_sequences.reshape(1, -1)
 
-        score = self.allerginicity.predict_proba(flattened_sequences)
+        score = self.allerginicity.predict_proba(reshaped_candidate)[0,1]
         return score
     
     
-    # def _get_fitness_batch(self, candidate_list):
-        
-    #     scores_list = []
-    #     for candidate in candidate_list:
-    #         score = self._get_fitness_single(candidate)
-    #         scores_list.append(score)
-        
-    #     return scores_list
-        
+    def _get_fitness_batch(self, ListProts):
+    
+        scores_list = []
+        candidates = self.one_hot_encode(ListProts)
+        flattened_sequences = candidates.reshape(candidates.shape[0], -1)
+        for candidate in flattened_sequences:
+                reshaped_candidate = candidate.reshape(1, -1)
+                score = self.allerginicity.predict_proba(reshaped_candidate)[:,1]
+                scores_list.append(score[0])
+    
+        return scores_list
+    
     def __str__(self):
         return 'Minimize allerginicity'
     

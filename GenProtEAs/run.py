@@ -94,7 +94,7 @@ def run(objective):
 if __name__ == '__main__' and True:
     
     import caseStudies 
-    from caseStudies import caseMinRules, caseMinAllergens, caseAllerGenProt, caseMaxEssential
+    from caseStudies import caseMinRules, caseMinAllergens, caseAllerGenProt, caseMaxEssential, caseMaxHydro
     # Set seeds
     seed = 41
     random.seed(seed)
@@ -107,9 +107,10 @@ if __name__ == '__main__' and True:
     #case = getattr(caseStudies, 'caseMaxEssential')
     #case = caseMinRules()
     #case = getattr(caseStudies, 'caseMaxHydro')
-    case = caseMinAllergens()
+    #case = caseMaxHydro()
+    #case = caseMinAllergens()
     #case = caseMaxEssential()
-    #case = caseAllerGenProt()
+    case = caseAllerGenProt()
     objective = case.objective
 
     run(objective)
