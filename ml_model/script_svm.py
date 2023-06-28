@@ -7,7 +7,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, f1_score, make_scorer
+from sklearn.metrics import classification_report, f1_score, make_scorer, matthews_corrcoef
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
 
@@ -66,10 +66,11 @@ class ml_model:
         pickle.dump(clf, open('/home/rfernandes/AllerGenProt/ml_model/svm_model.sav', 'wb'))
         predictions = clf.predict(self.X_test)
         score = classification_report(self.y_test, predictions)
-        output_file = '/home/rfernandes/allerStat/ml_model/svm_output3.txt'
+        output_file = '/home/rfernandes/allerStat/ml_model/svm_output.txt'
+        MCCSVM = matthews_corrcoef(self.y_test, predictions)
         
         with open(output_file, 'w') as f:
-            f.write(f'SVM model:\n {score}')
+            f.write(f'SVM model:\n {score}\n MCC SVM: {MCCSVM}')
 
         return score
 
@@ -85,11 +86,12 @@ class ml_model:
         pickle.dump(lclf, open('/home/rfernandes/AllerGenProt/ml_model/lclf_model.sav', 'wb'))
         predictions = lclf.predict(self.X_test)
         score = classification_report(self.y_test, predictions)
+        MCCSVM = matthews_corrcoef(self.y_test, predictions)
 
-        output_file = '/home/rfernandes/allerStat/ml_model/linear_svm_output3.txt'
+        output_file = '/home/rfernandes/allerStat/ml_model/linear_svm_output.txt'
 
         with open(output_file, 'w') as f:
-            f.write(f'Linear SVM model:\n {score}')
+            f.write(f'Linear SVM model:\n {score}  \n MCC SVM: {MCCSVM}')
 
         return score
 
@@ -103,14 +105,16 @@ class ml_model:
 
         grid_lr = GridSearchCV(LogisticRegression(max_iter=10000),param_grid, verbose=3, cv=5, scoring=scorer)
         grid_lr.fit(self.X_train, self.y_train)
-        pickle.dump(clf, open('/home/rfernandes/AllerGenProt/ml_model/grid_lr_model.sav', 'wb'))
+        pickle.dump(grid_lr, open('/home/rfernandes/AllerGenProt/ml_model/grid_lr_model.sav', 'wb'))
         y_pred_grid_lr = grid_lr.predict(self.X_test)
         score = classification_report(self.y_test, y_pred_grid_lr)
+        MCCSVM = matthews_corrcoef(self.y_test, y_pred_grid_lr)
+        print("MCC SVM:", MCCSVM)
 
-        output_file = '/home/rfernandes/allerStat/ml_model/logistic_regressor_output3.txt'
+        output_file = '/home/rfernandes/allerStat/ml_model/logistic_regressor_output.txt'
 
         with open(output_file, 'w') as f:
-            f.write(f'Logistic regressor model:\n {score}')
+            f.write(f'Logistic regressor model:\n {score} \n MCC SVM: {MCCSVM}')
 
         return score
 
